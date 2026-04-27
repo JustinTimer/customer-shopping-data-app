@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Data</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .pagination {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination button {
+            margin: 0 5px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+
+        .pagination button.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .pagination button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+		 /* Add Entry Container */
+		 #add-entry-container {
+			max-width: 400px; /* Reduce the width for a more compact look */
+			margin: 20px auto;
+			padding: 15px;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			background-color: #f9f9f9;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			font-family: Arial, sans-serif;
+			}
+		  /* Title */
+		  #add-entry-container h3 {
+        margin-bottom: 15px;
+        color: #333;
+        text-align: center;
+		font-size: 18px;
+   		 }
+		  /* Form Layout */
+		  #add-entry-form {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0px;
+    	}
+		  /* Input Fields */
+		  #add-entry-form label {
+			font-weight: bold;
+			color: #555;
+			font-size: 14px;
+			margin-bottom: 3px;
+			}
+		#add-entry-form input {
+			width: 100%;
+			padding: 6px 8px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			font-size: 14px;
+			line-height: 1.4;
+			box-sizing: border-box; /* Ensure consistent sizing */
+			}
+	   /* Button */
+	   #add-entry-button {
+		padding: 8px;
+		margin-top: 10px;
+		border: none;
+		background-color: #007bff;
+		color: white;
+		font-size: 14px;
+		border-radius: 4px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+		text-align: center;
+    	}
+		#add-entry-button:hover {
+        background-color: #0056b3;
+   		 }
+
+   	 	#add-entry-button:active {
+        background-color: #003f7f;
+    	}
+		#download-csv {
+			display: block; /* Makes the button behave like a block element */
+			margin: 20px auto; /* Automatically center the button horizontally */
+			padding: 10px 20px; 
+			border: none;
+			border-radius: 5px;
+			background: linear-gradient(90deg, #4caf50, #2e7d32); /* Gradient background */
+			color: white;
+			font-size: 16px;
+			font-weight: bold;
+			text-transform: uppercase;
+			cursor: pointer;
+			transition: background-color 0.3s, transform 0.2s;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+				}
+		#download-csv:hover {
+			background: linear-gradient(90deg, #66bb6a, #388e3c); /* Lighter gradient on hover */
+			transform: translateY(-2px); /* Slightly "lift" the button */
+			box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+		}
+		#download-csv:active {
+			background: linear-gradient(90deg, #2e7d32, #1b5e20); /* Darker gradient on click */
+			transform: translateY(0); /* Return to original position */
+			box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2); /* Reduced shadow on click */
+		}
+		#main-heading {
+			font-size: 28px; /* Larger text size for emphasis */
+			font-weight: bold; /* Bold for visibility */
+			text-align: center; /* Centered alignment */
+			margin: 20px 0; /* Spacing around the heading */
+			color: #4caf50; 
+			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+			font-family: "Segoe UI", Arial, sans-serif; /* Modern and clean font */
+		}
+		#main-heading::after {
+			content: ""; /* Add a decorative divider */
+			display: block;
+			width: 100px; /* Adjust the width as needed */
+			height: 3px; /* Divider height */
+			background: linear-gradient(90deg, #4caf50, #2e7d32); /* Gradient matching the button */
+			margin: 10px auto 0; /* Center it and add space */
+			border-radius: 2px; /* Rounded edges */
+		}
+		table th {
+			font-size: 20px; /* Increase the font size */
+			font-weight: bold; /* Make the headers bold */
+			color: #333; /* Darker color for better visibility */
+			text-align: center; /* Center-align the headers */
+			padding: 8px; /* Add padding for better spacing */
+			background-color: #f4f4f4; /* Subtle background color */
+			border-bottom: 2px solid #ddd; /* Add a border for separation */
+		}
+		table td {
+			font-size: 16px; /* Slightly smaller than headers */
+			text-align: center; /* Center-align the data */
+			padding: 8px; /* Add padding for better spacing */
+			color: #555; /* Darker gray for readability */
+			border-bottom: 1px solid #eee; /* Subtle border for row separation */
+		}
+    </style>
+</head>
+<body>
+    <h1 id="main-heading">Customer Shopping Data</h1>
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>Invoice No</th>
+                <th>Customer ID</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Payment Method</th>
+                <th>Invoice Date</th>
+                <th>Shopping Mall</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data rows will be dynamically added here -->
+        </tbody>
+    </table>
+
+    <div class="pagination" id="pagination">
+        <!-- Pagination buttons will be dynamically added here -->
+    </div>
+	<div id="add-entry-container">
+		<h3>Add New Entry</h3>
+		<form id="add-entry-form">
+			<!-- Form fields will be dynamically generated -->
+		</form>
+		<button id="add-entry-button">Add Entry</button>
+	</div>
+	<button id="download-csv">Download CSV</button>
+
+		<script>
+		const rowsPerPage = 12;
+		let currentPage = 1;
+		let data = []; // This will hold the parsed CSV data.
+
+		// Function to fetch and parse the CSV file
+		async function fetchCSV() {
+			const response = await fetch('customer_shopping_data.csv'); // Ensure the file is hosted or served on the same server.
+			const csvText = await response.text();
+			parseCSV(csvText);
+		}
+
+		// Function to parse CSV text into JSON format
+		function parseCSV(csvText) {
+			const rows = csvText.split('\n');
+			const headers = rows[0].split(',').map(header => header.trim());; // Extract the column names from the first row
+			data = rows.slice(1).filter(row => row.trim() !== '').map(row => {
+        	const values = row.split(',').map(value => value.trim()); // Split values and trim whitespace
+        	return headers.reduce((acc, header, index) => {
+            acc[header] = values[index] || ''; // Handle missing values
+            return acc;
+				}, {});
+			});
+    		renderTable();
+			// Call this after parsing the CSV to generate the fields
+			generateFormFields();
+		}
+
+		function generateFormFields() {
+   		 	const form = document.getElementById('add-entry-form');
+    		form.innerHTML = ''; // Clear existing fields
+		
+   			 if (data.length > 0) {
+        	Object.keys(data[0]).forEach(header => {
+            const label = document.createElement('label');
+            label.textContent = `${header}: `;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = header;
+            input.required = true;
+
+            // Add label and input to the form
+            form.appendChild(label);
+            form.appendChild(input);
+            form.appendChild(document.createElement('br')); // Line break for spacing
+       		 });
+   	 		}
+		}
+
+		function renderTable() {
+			const tableHead = document.querySelector('#data-table thead tr');
+    		const tableBody = document.querySelector('#data-table tbody');
+
+			// Clear existing headers and rows
+			tableHead.innerHTML = '';
+			tableBody.innerHTML = '';
+
+			// Populate table headers
+			if (data.length > 0) {
+       		 Object.keys(data[0]).forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            tableHead.appendChild(th);
+        });
+   	 }
+	 		// Calculate rows for the current page
+			const start = (currentPage - 1) * rowsPerPage;
+			const end = Math.min(start + rowsPerPage, data.length); // Avoid overflow
+			const rows = data.slice(start, end); // Extract only visible rows
+
+			 // Populate visible rows
+			rows.forEach((row, rowIndex) => {
+			const tr = document.createElement('tr');
+			Object.keys(row).forEach(key => {
+				const td = document.createElement('td');
+				td.textContent = row[key];
+				td.contentEditable = true; // Make cells editable
+
+				// Update the data array when a cell is edited
+				td.addEventListener('input', (e) => {
+					data[start + rowIndex][key] = e.target.textContent.trim();
+				});
+
+				tr.appendChild(td);
+			});
+			tableBody.appendChild(tr);
+		});
+
+		renderPagination();
+		}
+
+		function renderPagination() {
+			const pagination = document.getElementById('pagination');
+			pagination.innerHTML = '';
+
+			const totalPages = Math.ceil(data.length / rowsPerPage);
+
+			const maxVisibleButtons = 7; // Limit the number of visible page buttons
+			let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
+			let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+
+			if (endPage - startPage < maxVisibleButtons) {
+        	startPage = Math.max(1, endPage - maxVisibleButtons + 1);
+  		  }
+
+		    // Add "Previous" button
+			if (currentPage > 1) {
+			const prevButton = document.createElement('button');
+			prevButton.textContent = 'Previous';
+			prevButton.addEventListener('click', () => {
+				currentPage--;
+				renderTable();
+			});
+			pagination.appendChild(prevButton);
+		}
+
+		  // Add page buttons
+		  for (let i = startPage; i <= endPage; i++) {
+			const pageButton = document.createElement('button');
+			pageButton.textContent = i;
+			if (i === currentPage) {
+				pageButton.disabled = true;
+			}
+			pageButton.addEventListener('click', () => {
+				currentPage = i;
+				renderTable();
+			});
+			pagination.appendChild(pageButton);
+		}
+
+		   // Add "Next" button
+		   if (currentPage < totalPages) {
+			const nextButton = document.createElement('button');
+			nextButton.textContent = 'Next';
+			nextButton.addEventListener('click', () => {
+				currentPage++;
+				renderTable();
+			});
+			pagination.appendChild(nextButton);
+		}
+		}
+
+		function downloadCSV() {
+		// Convert data array to CSV format
+		const csvHeaders = Object.keys(data[0]).join(','); // Create headers
+		const csvRows = data.map(row => 
+			Object.values(row).map(value => `"${value}"`).join(',')
+		); // Create rows
+		const csvContent = [csvHeaders, ...csvRows].join('\n'); // Combine headers and rows
+
+		// Create a Blob from the CSV string
+		const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+		// Create a download link
+		const downloadLink = document.createElement('a');
+		const url = URL.createObjectURL(blob);
+		downloadLink.href = url;
+		downloadLink.download = 'new_customer_shopping_data.csv'; // File name for the downloaded CSV
+		downloadLink.style.display = 'none';
+
+		// Append the link to the body, click it, and remove it
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+		document.body.removeChild(downloadLink);
+	}
+
+	document.getElementById('add-entry-button').addEventListener('click', (e) => {
+		e.preventDefault(); // Prevent default form submission behavior
+
+		const form = document.getElementById('add-entry-form');
+		const formData = new FormData(form);
+
+		// Expected data types for each field
+		const expectedTypes = {
+			"invoice_no": "string",
+			"customer_id": "string",
+			"gender": "string",
+			"age": "integer",
+			"category": "string",
+			"quantity": "integer",
+			"price": "double",
+			"payment_method": "string",
+			"invoice_date": "string",
+			"shopping_mall": "string"
+		};
+
+		let newRowData = {};
+		let allFieldsFilled = true;
+		let isValid = true;
+
+		for (let [key, value] of formData.entries()) {
+			value = value.trim(); // Trim spaces
+
+			if (!value) {
+				allFieldsFilled = false;
+				break;
+			}
+
+			// Validate types
+			if (expectedTypes[key] === "integer") {
+				if (!/^\d+$/.test(value)) {
+					isValid = false;
+					alert(`Invalid value for ${key}: Expected an integer.`);
+					break;
+				} else {
+					value = parseInt(value, 10);
+				}
+			} else if (expectedTypes[key] === "double") {
+				if (!/^\d+(\.\d+)?$/.test(value)) {
+					isValid = false;
+					alert(`Invalid value for ${key}: Expected a decimal number.`);
+					break;
+				} else {
+					value = parseFloat(value);
+				}
+			} else if (expectedTypes[key] === "string") {
+				// Ensure string fields (like "gender") do not contain only numbers
+				if (/^\d+$/.test(value)) {
+					isValid = false;
+					alert(`Invalid value for ${key}: Expected text, but found only numbers.`);
+					break;
+				}
+			}
+
+			newRowData[key] = value;
+		}
+
+		if (!allFieldsFilled) {
+			alert("Please fill in all the fields.");
+			return;
+		}
+
+		if (!isValid) {
+			return;
+		}
+
+		// Add new entry to the data array
+		data.push(newRowData);
+
+		// Add new entry to the table
+		const tbody = document.querySelector("#data-table tbody");
+		const newRow = document.createElement("tr");
+
+		Object.values(newRowData).forEach((cellData) => {
+			const td = document.createElement("td");
+			td.textContent = cellData;
+			newRow.appendChild(td);
+		});
+
+		tbody.appendChild(newRow);
+
+		// Clear input fields
+		form.reset();
+
+		// Show success alert
+		alert("Entry added successfully!");
+
+		// Re-render the table
+		renderTable();
+	});
+
+	document.getElementById('download-csv').addEventListener('click', downloadCSV);
+
+		// Call fetchCSV to load data when the page loads
+		fetchCSV();
+	</script>
+</body>
+</html>
